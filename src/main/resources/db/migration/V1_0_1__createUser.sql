@@ -1,8 +1,9 @@
 CREATE TABLE IF NOT EXISTS user (
-  id int(11) NOT NULL,
+  id int(11) NOT NULL AUTO_INCREMENT,
   first_name varchar(50) DEFAULT NULL,
   last_name varchar(50) DEFAULT NULL,
-  email varchar(50) DEFAULT NULL
+  email varchar(50) DEFAULT NULL,
+  PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO user (id, `first_name`, `last_name`, `email`) VALUES
