@@ -44,4 +44,9 @@ public class User {
     @Column(name = "email")
     private String email;
 
+    @Column(name = "role_id", nullable = true)
+    private Integer roleId;
+
+    @Column(name = "privilege_id", nullable = true)
+    private Integer privilegeId;
 }
