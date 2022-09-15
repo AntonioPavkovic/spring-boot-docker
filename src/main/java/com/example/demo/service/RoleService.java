@@ -1,11 +1,11 @@
 package com.example.demo.service;
 
-import com.example.demo.exception.RoleNotFoundException;
 import com.example.demo.model.Roles;
 import com.example.demo.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -14,42 +14,24 @@ public class RoleService {
     @Autowired
     private RoleRepository roleRepository;
 
-    public Optional<Roles> getRole(Integer id) {
-        Optional<Roles> roles = roleRepository.findById(id);
-        return roles;
+    public List<Roles> getAllRoles() {
+        return roleRepository.findAll();
     }
 
-    public Roles createRole (Roles roles) {
-
-        Roles existingRoles = roleRepository.findRoleByRoleName(roles.getRoleName());
-
-        if (existingRoles != null) {
-            return null;
-        }
-
-        roles = roleRepository.save(roles);
-        return roles;
+    public Optional<Roles> getRoleById(Integer id) {
+        return roleRepository.findById(id);
     }
 
-    public Roles updateRoles(Roles roles) {
+    public Roles createRole(Roles role) {
+        return roleRepository.save(role);
+    }
 
-        Optional<Roles> existingRole = roleRepository.findById(roles.getId());
-
+    public Roles updateRole(Roles role) {
+        Optional<Roles> existingRole = roleRepository.findById(role.getId());
         if (existingRole.isPresent()) {
-            roles = roleRepository.save(roles);
-
-            return roles;
+            role = roleRepository.save(role);
+            return role;
         }
         return null;
     }
-
-
-    public void deleteRole(Integer id) throws RoleNotFoundException{
-
-        Roles roles = roleRepository.findById(id)
-                .orElseThrow(() -> new RoleNotFoundException("Role with the id: " + id + " does not exist"));
-
-        roleRepository.delete(roles);
-    }
-
 }

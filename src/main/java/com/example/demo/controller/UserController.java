@@ -3,7 +3,8 @@ package com.example.demo.controller;
 import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
+import com.example.demo.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,10 +25,13 @@ import java.util.List;
 @RestController
 @CrossOrigin
 @RequestMapping("/api/v1/users")
-@RequiredArgsConstructor
 public class UserController {
-    private final UserRepository userRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private UserService userService;
     /**
      * API endpoint - GET method that returns a list of users
      *
@@ -35,7 +39,7 @@ public class UserController {
      */
     @GetMapping()
     public List<User> getAllUsers() {
-        return userRepository.findAll();
+        return userService.getAllUsers();
     }
 
     /**
@@ -48,7 +52,7 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable(value = "id") Integer id) throws UserNotFoundException {
 
-        User user = userRepository.findById(id)
+        User user = userService.getUserById(id)
                 .orElseThrow(() -> new UserNotFoundException("User with id: " + id + " not found"));
 
         return new ResponseEntity<>(user, HttpStatus.OK);
@@ -62,32 +66,19 @@ public class UserController {
      */
     @PostMapping()
     public ResponseEntity<User> createUser(@RequestBody User user){
-        return new ResponseEntity<>(userRepository.save(user), HttpStatus.OK);
+        return new ResponseEntity<>(userService.createUser(user), HttpStatus.OK);
     }
 
     /**
      * API endpoint - PUT method that updates a user based on his id
      *
-     * @param id
-     * @param u
+     * @param user
      * @return Response Entity with an appropriate HTTP status code
      * @throws UserNotFoundException
      */
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(
-            @PathVariable(value = "id") Integer id,
-            @RequestBody User u
-    ) throws UserNotFoundException {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("User with id: " +id+ " not found"));
-
-        user.setId(u.getId());
-        user.setFirstName(u.getFirstName());
-        user.setLastName(u.getLastName());
-        user.setEmail(u.getEmail());
-
-        final User updatedUser = userRepository.save(user);
-        return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+    public ResponseEntity<User> updateUser(@RequestBody User user) {
+        return new ResponseEntity<>(userService.updateUser(user), HttpStatus.OK);
     }
 
     /**

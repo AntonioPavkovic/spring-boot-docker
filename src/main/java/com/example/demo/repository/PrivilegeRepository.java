@@ -5,6 +5,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PrivilegeRepository extends JpaRepository<Privileges, Integer> {
 
-    Privileges findByPrivilegeName(String name);
-
 }
