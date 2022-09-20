@@ -8,6 +8,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.Collection;
 
 @Entity
 @Table(name = "roles")
@@ -27,4 +28,15 @@ public class Roles {
     @Column(name = "role_name")
     private String roleName;
 
+    @ManyToMany(mappedBy = "roles")
+    private Collection<User> users;
+
+    @ManyToMany
+    @JoinTable(
+            name = "roles_privileges",
+            joinColumns = @JoinColumn(
+                    name = "role_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "privilege_id", referencedColumnName = "id"))
+    private Collection<Privileges> privileges;
 }
